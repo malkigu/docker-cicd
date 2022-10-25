@@ -4,8 +4,7 @@ pipeline {
     stages {
         stage('Checkout From SCM') {
             steps {
-                echo 'Checkout from SCM..'
-                echo checkout ...
+                sh echo 'Checkout from SCM..'
             }
         }
         stage('Pre-build stg') {
