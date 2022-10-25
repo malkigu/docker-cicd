@@ -1,35 +1,6 @@
 pipeline {
-    agent any
-
+    agent none
     stages {
-        stage('Checkout From SCM') {
-            steps {
-                sh echo 'Checkout from SCM..'
-            }
-        }
-        stage('Pre-build stg') {
-            steps {
-                sh 'echo "prebuild build"'
-            }
-        }
-        stage('Build') {
-            steps {
-              sh 'echo "docke build'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'docker build --target test'
-            }
-        }
-        stage('security') {
-            agent {
-                docker { image 'alpine:latest' }
-            }
-            steps {
-                sh 'echo this is security'
-            }
-        }
         stage('Back-end') {
             agent {
                 docker { image 'maven:3.8.1-adoptopenjdk-11' }
@@ -46,17 +17,20 @@ pipeline {
                 sh 'node --version'
             }
         }
-        stage('Deploy') {
-            agent {
-                docker { image 'aws-cli:latest' }
-            }
+        stage('Build') {
             steps {
-                sh 's3 cp src dst'
+                echo 'Building '
             }
         }
-      stage ('Post') {
-        echo "clear env"
-      }
-      
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+            }
+        }
+        stage('integrationTest') {
+            steps {
+                echo 'Deploying....'
+            }
+        }
     }
 }
