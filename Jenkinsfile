@@ -1,47 +1,36 @@
 pipeline {
-    agent any
-
+    agent none
     stages {
-        stage('Pre-build stg') {
+        stage('Back-end') {
+            agent {
+                docker { image 'maven:3.8.1-adoptopenjdk-11' }
+            }
             steps {
-                echo 'Prebuild actions..'
+                sh 'mvn --version'
+            }
+        }
+        stage('Front-end') {
+            agent {
+                docker { image 'node:16.13.1-alpine' }
+            }
+            steps {
+                sh 'node --version'
             }
         }
         stage('Build') {
             steps {
-              sh 'echo "docker build --target Build"'
+                echo 'Building '
             }
         }
         stage('Test') {
             steps {
-                sh 'echo "docker build --target test"'
+                echo 'Testing..'
             }
         }
-        stage('Security') {
+        stage('integrationTest') {
             steps {
-                sh 'echo "docker build --target security""'
-            }
-        }
-        stage('Back-end') {
-            steps {
-                sh 'echo "docker build --target backend""'
-            }
-        }
-        stage('Front-end') {
-            steps {
-                sh 'docker build --target Front-end'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sh 'echo "docker build --target deploy"'
-            }
-        }
-        stage('Post') {
-            steps {
-                echo "Clear env"
+                echo 'Deploying....'
             }
         }
     }
 }
-
